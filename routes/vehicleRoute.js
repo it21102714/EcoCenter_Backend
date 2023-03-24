@@ -1,5 +1,6 @@
 // vehicleRoute.js
 
+
 const express = require("express");
 const Vehicle = require("../models/vehicles");
 
@@ -49,3 +50,4 @@ router.delete("/:number", (req, res) => {
 });
 
 module.exports = router;
+

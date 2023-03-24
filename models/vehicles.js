@@ -15,7 +15,9 @@ class Vehicle {
   }
 
   static getOne(number) {
-    return vehicles.find((v) => v.number === number);
+
+    return vehicles.find(v => v.number === number);
+
   }
 
   static add(vehicle) {
@@ -23,7 +25,9 @@ class Vehicle {
   }
 
   static update(number, newVehicle) {
+
     const index = vehicles.findIndex((v) => v.number === number);
+
     if (index !== -1) {
       vehicles[index] = newVehicle;
       return true;
@@ -32,7 +36,9 @@ class Vehicle {
   }
 
   static delete(number) {
+
     const index = vehicles.findIndex((v) => v.number === number);
+
     if (index !== -1) {
       vehicles.splice(index, 1);
       return true;
