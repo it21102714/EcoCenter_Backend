@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { response } = require("express");
-let Shedulle = require("../models/Shedulle");
+let Shedulles = require("../models/Shedulle");
 
 //Localhost:8070/Shedulle/add
 
@@ -11,15 +11,15 @@ http: router.route("/add").post(async (req, res) => {
     const Scity = req.body.Scity;
     const Sdate = new Date().getDate();
 
-    const newShedulle = new Shedulle({
+    const newShedulles = new Shedulles({
       Sctact,
       Sadres,
       Scity,
       Sdate,
     });
 
-    await newShedulle.save();
-    res.status(200).send({ status: "Shedulle Created", post: newShedulle });
+    await newShedulles.save();
+    res.status(200).send({ status: "Shedulles Created", post: newShedulles });
   } catch (error) {
     res.status(500).send(error.message);
     console.log(error.message);
@@ -29,19 +29,19 @@ http: router.route("/add").post(async (req, res) => {
 //localhost:8070/Shedulle
 
 http: router.route("/").get((req, res) => {
-  Shedulle.find()
-    .then((Shedulle) => {
-      res.json(Shedulle);
+  Shedulles.find()
+    .then((Shedulles) => {
+      res.json(Shedulles);
     })
     .catch((err) => {
       console.log(err);
     });
 });
 
-//localhost:8070/Shedulle/update/5ffffffhf
+//localhost:8070/Shedulles/update/5ffffffhf
 
 http: router.route("/update/:id").put(async (req, res) => {
-  let ShedulleId = req.params.id;
+  let ShedullesId = req.params.id;
   const { Sctact, Sadres, Scity, Sdate } = req.body;
 
   const upadatepdetails = {
@@ -51,46 +51,57 @@ http: router.route("/update/:id").put(async (req, res) => {
     Sdate,
   };
 
-  const update = await Shedulle.findByIdAndUpdate(ShedulleId, upadatepdetails)
-    .then(() => {
-      res.status(200).send({ status: "Shedulle updated" });
+  return await Shedulles.findById(ShedullesId)
+    .then((shedule) => {
+      if (shedule) {
+        return shedule
+          .set(upadatepdetails)
+          .save()
+          .then((val) => {
+            return res.status(201).json({ message: "updated sucessfully" });
+          })
+          .catch((err) => {
+            return res.status(500).json({ err });
+          });
+      } else {
+        return res.status(404).json({ message: "shedule not found" });
+      }
     })
     .catch((err) => {
-      console.log(err);
-      res
-        .status(500)
-        .send({ status: "Error with updating date", error: err.message });
+      return res.status(500).json({ err });
     });
 });
 
 //localhost:8070/delete/5ffffffhf
 
 http: router.route("/delete/:id").delete(async (req, res) => {
-  let ShedulleId = req.params.id;
+  let ShedullesId = req.params.id;
 
-  await Shedulle.findByIdAndDelete(ShedulleId)
+  await Shedulles.findByIdAndDelete(ShedullesId)
     .then(() => {
-      res.status(200).send({ status: "Shedulle deleted" });
+      res.status(200).send({ status: "Shedulles deleted" });
     })
     .catch((err) => {
       console.log(err.message);
       res
         .status(500)
-        .send({ status: "Error with Delete Shedulle", error: err.message });
+        .send({ status: "Error with Delete Shedulles", error: err.message });
     });
 });
 
 router.route("/get/:id").get(async (req, res) => {
-  let ShedulleId = req.params.id;
-  const Shedulle = await Shedulle.findById(ShedulleId)
-    .then((Shedulle) => {
-      res.status(200).send({ status: "Shedulle fetched", Shedulle: Shedulle });
+  let ShedullesId = req.params.id;
+  return await Shedulles.findById(ShedullesId)
+    .then((Shedulles) => {
+      return res
+        .status(200)
+        .send({ status: "Shedulles fetched", Shedulles: Shedulles });
     })
     .catch((err) => {
       console.log(err.message);
-      res
+      return res
         .status(500)
-        .send({ status: "Error with get Shedulle", error: err.message });
+        .send({ status: "Error with get Shedulles", error: err.message });
     });
 });
 
