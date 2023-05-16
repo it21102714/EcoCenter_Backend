@@ -1,53 +1,79 @@
-// vehicleRoute.js
-
-
-const express = require("express");
-const Vehicle = require("../models/vehicles");
-
+const express = require('express');
 const router = express.Router();
+const Vehicle = require('../models/vehicles');
 
-router.get("/", (req, res) => {
-  const vehicles = Vehicle.getAll();
-  res.render("index", { vehicles });
-});
-
-router.get("/new", (req, res) => {
-  res.render("new");
-});
-
-router.post("/", (req, res) => {
-  const { number, brand, description, city } = req.body;
-  const vehicle = new Vehicle(number, brand, description, city);
-  Vehicle.add(vehicle);
-  res.redirect("/");
-});
-
-router.get("/:number/edit", (req, res) => {
-  const vehicle = Vehicle.getOne(req.params.number);
-  if (vehicle) {
-    res.render("edit", { vehicle });
-  } else {
-    res.redirect("/");
+// Create a new vehicle
+// localhost:8070/Vehicle
+/*
+{
+  "vehicleNumber": "ABF123",
+  "driverName": "John",
+  "driverCity": "Malabe",
+  "telephoneNo": "0717864739",
+  "emailAddress": "john@google.com"
+}
+*/
+router.post('/', async (req, res) => {
+  try {
+    const vehicle = new Vehicle(req.body);
+    await vehicle.save();
+    res.status(201).json(vehicle);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 
-router.patch("/:number", (req, res) => {
-  const { number, brand, description, city } = req.body;
-  const newVehicle = new Vehicle(number, brand, description, city);
-  if (Vehicle.update(req.params.number, newVehicle)) {
-    res.redirect("/");
-  } else {
-    res.redirect("/");
+// Get all vehicles
+// localhost:8070/Vehicle/all
+router.get('/all', async (req, res) => {
+  try {
+    const vehicles = await Vehicle.find();
+    res.json(vehicles);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
-router.delete("/:number", (req, res) => {
-  if (Vehicle.delete(req.params.number)) {
-    res.redirect("/");
-  } else {
-    res.redirect("/");
+// Get a single vehicle by ID
+// localhost:8070/Vehicle/64631dd61242b460436175f8
+router.get('/:id', async (req, res) => {
+  try {
+    const vehicle = await Vehicle.findById(req.params.id);
+    if (!vehicle) {
+      return res.status(404).json({ message: 'Vehicle not found' });
+    }
+    res.json(vehicle);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update a vehicle
+// localhost:8070/Vehicle/64631dd61242b460436175f8
+router.put('/:id', async (req, res) => {
+  try {
+    const vehicle = await Vehicle.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!vehicle) {
+      return res.status(404).json({ message: 'Vehicle not found' });
+    }
+    res.json(vehicle);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Delete a vehicle
+// localhost:8070/Vehicle/64631f11039992cef07eb54b
+router.delete('/:id', async (req, res) => {
+  try {
+    const vehicle = await Vehicle.findByIdAndDelete(req.params.id);
+    if (!vehicle) {
+      return res.status(404).json({ message: 'Vehicle not found' });
+    }
+    res.json({ message: 'Vehicle deleted' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
 module.exports = router;
-
