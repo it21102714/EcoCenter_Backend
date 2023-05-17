@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const Schema = mongoose.Schema;
 
 const Shedulleschema = new Schema({
@@ -21,6 +22,7 @@ const Shedulleschema = new Schema({
     type: Date,
     default: Date.now,
   },
+  
 });
 
 const Shedulles = mongoose.model("Shedulles", Shedulleschema);
