@@ -37,7 +37,7 @@ const postRouterRouter = require("./routes/postRouter.js");
 const DonationsListRouter = require("./routes/DonationsList.js");
 const vehicleRouteRouter = require("./routes/vehicleRoute.js");
 
-app.use("/Shedulle", ShedulleRouter);
+app.use("/Shedulles", ShedulleRouter);
 
 app.use("/post", postRouterRouter);
 
