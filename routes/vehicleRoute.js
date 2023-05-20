@@ -50,7 +50,7 @@ router.get('/:id', async (req, res) => {
 
 // Update a vehicle
 // localhost:8070/Vehicle/64631dd61242b460436175f8
-router.put('/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
   try {
     const vehicle = await Vehicle.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!vehicle) {
