@@ -10,14 +10,14 @@ router.post('/notifications', async (req, res) => {
       const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-          user: 'your_email@example.com',
+          user: 'kalanioj@example.com',
           pass: 'your_password'
         }
       });
   
       // Define the email message
       const mailOptions = {
-        from: 'your_email@example.com',
+        from: 'kalanioj@example.com',
         to: email,
         subject: 'Test Test',
         text: 'Test 123'
