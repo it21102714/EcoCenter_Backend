@@ -7,7 +7,7 @@ const DonationListSchema = new Schema({
     type: String,
     required: false,
   },
-
+  //add Dname
   Dname: {
     type: String,
     required: true,
