@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { response } = require("express");
-let post = require("../models/post");
+let post = require(".../models/post");
 
 //Localhost:8070/post/add
 
